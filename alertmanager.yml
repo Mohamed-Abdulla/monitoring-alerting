@@ -1,0 +1,14 @@
+global:
+  resolve_timeout: 1m
+
+route:
+  group_by: ["alertname"]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 1h
+  receiver: "log_receiver"
+
+receivers:
+  - name: "log_receiver"
+    webhook_configs:
+      - url: "http://localhost:9093" # dummy local log endpoint for testing

@@ -1,0 +1,85 @@
+groups:
+  - name: node_exporter_alerts
+    rules:
+      # --- Node Exporter Down ---
+      - alert: NodeExporterDown
+        expr: up{job="node-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Node Exporter down"
+          description: "Node Exporter has been down for more than 1 minute."
+
+      # --- Disk Usage Alerts ---
+      - alert: DiskSpaceUsageWarning
+        expr:
+          (node_filesystem_size_bytes{fstype!~"tmpfs|overlay"} - node_filesystem_free_bytes{fstype!~"tmpfs|overlay"})
+          / node_filesystem_size_bytes{fstype!~"tmpfs|overlay"} > 0.75
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Disk space warning on {{ $labels.instance }}"
+          description: "Disk usage is above 75% on {{ $labels.mountpoint }} ({{ $labels.device }})"
+
+      - alert: DiskSpaceUsageCritical
+        expr:
+          (node_filesystem_size_bytes{fstype!~"tmpfs|overlay"} - node_filesystem_free_bytes{fstype!~"tmpfs|overlay"})
+          / node_filesystem_size_bytes{fstype!~"tmpfs|overlay"} > 0.85
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Disk space critical on {{ $labels.instance }}"
+          description: "Disk usage is above 85% on {{ $labels.mountpoint }} ({{ $labels.device }})"
+
+      # --- CPU Usage Alerts ---
+      - alert: HighCPUUsage
+        expr: (1 - avg by(instance)(rate(node_cpu_seconds_total{mode="idle"}[5m]))) > 0.85
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage has been above 85% for 3 minutes."
+
+      # --- Memory Usage Alerts ---
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 0.85
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Memory usage on {{ $labels.instance }}"
+          description: "Memory usage is above 85% on {{ $labels.instance }}."
+
+      # --- Instance Uptime Alert ---
+      - alert: NodeRebooted
+        expr: (time() - node_boot_time_seconds) < 300
+        for: 0m
+        labels:
+          severity: info
+        annotations:
+          summary: "Node {{ $labels.instance }} rebooted"
+          description: "Node has restarted within the last 5 minutes."
+
+      # --- Load Average Alert ---
+      - alert: HighSystemLoad
+        expr: node_load1 / count by(instance) (node_cpu_seconds_total{mode="system"}) > 1.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High system load on {{ $labels.instance }}"
+          description: "System load average (1m) is high compared to CPU count."
+
+      # --- Filesystem Read-only Alert ---
+      - alert: FilesystemReadOnly
+        expr: node_filesystem_readonly == 1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Filesystem in read-only mode on {{ $labels.instance }}"
+          description: "Filesystem {{ $labels.mountpoint }} is in read-only mode!"
