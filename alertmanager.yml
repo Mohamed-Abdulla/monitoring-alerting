@@ -10,8 +10,9 @@ route:
 
 receivers:
   - name: discord_webhook
-    webhook_configs:
-      - url: "https://discord.com/api/webhooks/abc"
+    discord_configs:
+      - api_url: "https://discord.com/api/webhooks/abc"
         send_resolved: true
-        http_config:
-          follow_redirects: true
+        username: "Alertmanager"
+        # Optional: avatar URL
+        # avatar_url: "https://example.com/alertmanager-avatar.png"
