@@ -1,2 +1,1 @@
-docker compose build
-docker compose up -d
+sudo docker compose -p monitoring up -d --build
