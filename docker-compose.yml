@@ -70,6 +70,7 @@ services:
       - DISCORD_WEBHOOK=${DISCORD_WEBHOOK}
       # optional:
       - DISCORD_USERNAME=Alertmanager
+      - DISCORD_EMBEDS=true
       # possible: - DISCORD_AVATAR_URL=<url>
       # optional logging:
       - VERBOSE=ON
