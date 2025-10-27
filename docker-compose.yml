@@ -69,7 +69,7 @@ services:
     environment:
       - DISCORD_WEBHOOK=${DISCORD_WEBHOOK}
       # optional:
-      # - DISCORD_USERNAME=Alertmanager
+      - DISCORD_USERNAME=Alertmanager
       # possible: - DISCORD_AVATAR_URL=<url>
       # optional logging:
       - VERBOSE=ON
