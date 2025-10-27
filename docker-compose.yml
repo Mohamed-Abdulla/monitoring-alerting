@@ -66,14 +66,6 @@ services:
     image: rogerrum/alertmanager-discord:latest
     container_name: alertmanager-discord
     restart: unless-stopped
-    environment:
-      - DISCORD_WEBHOOK=${DISCORD_WEBHOOK}
-      # optional:
-      - DISCORD_USERNAME=Alertmanager
-      - DISCORD_EMBEDS=true
-      # possible: - DISCORD_AVATAR_URL=<url>
-      # optional logging:
-      - VERBOSE=ON
     env_file:
       - .env
     ports:
