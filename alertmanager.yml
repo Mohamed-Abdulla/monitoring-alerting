@@ -12,4 +12,3 @@ receivers:
   - name: discord_webhook
     webhook_configs:
       - url: "http://alertmanager-discord:9094"
-        send_resolved: true
